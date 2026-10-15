@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE = 'shivam3274/devops-assessment9-1'
+        IMAGE = 'shivam3294/devops-assessment9-1'
         DEPLOYMENT = 'devops-assessment9-1'
         CONTAINER = 'devops-assessment9-1'
         SERVICE = 'devops-assessment9-1-service'
