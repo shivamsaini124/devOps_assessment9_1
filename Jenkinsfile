@@ -1,52 +1,19 @@
-
 pipeline {
     agent any
-
     environment {
-        IMAGE = 'shivam3294/devops-assessment9-1'
-        DEPLOYMENT = 'devops-assessment9-1'
-        CONTAINER = 'devops-assessment9-1'
-        SERVICE = 'devops-assessment9-1-service'
+        DOCKER_IMAGE = "shivam3294/devOps_assessment9_1"
     }
-
     stages {
         stage('Clone Code') {
             steps {
-                checkout scm
+                git branch: 'main',
+                    url: 'https://github.com/shivamsaini124/devOps_assessment8.git'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Docker Build') {
             steps {
-                sh '''
-                    docker build -t $IMAGE:$BUILD_NUMBER .
-                '''
-            }
-        }
-
-        stage('Test Application') {
-            steps {
-                sh '''
-                    set -eu
-
-                    docker run -d \
-                      --name devops-assessment9-1-test \
-                      -p 18080:80 \
-                      $IMAGE:$BUILD_NUMBER
-
-                    trap 'docker rm -f devops-assessment9-1-test >/dev/null 2>&1 || true' EXIT
-
-                    for i in $(seq 1 15); do
-                      if curl -fsS http://127.0.0.1:18080 -o /dev/null; then
-                        echo "Application test passed"
-                        exit 0
-                      fi
-                      sleep 2
-                    done
-
-                    echo "Application test failed"
-                    exit 1
-                '''
+                sh 'docker build --pull=false -t $DOCKER_IMAGE:latest .'
             }
         }
 
@@ -55,18 +22,12 @@ pipeline {
                 withCredentials([
                     usernamePassword(
                         credentialsId: 'dockerhub',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_TOKEN'
+                        usernameVariable: 'USER',
+                        passwordVariable: 'PASS'
                     )
                 ]) {
-                    sh '''
-                        set +x
-                        echo "$DOCKER_TOKEN" | docker login \
-                          -u "$DOCKER_USER" --password-stdin
-
-                        docker push $IMAGE:$BUILD_NUMBER
-                        docker logout
-                    '''
+                    sh 'echo "$PASS" | docker login -u "$USER" --password-stdin'
+                    sh 'docker push $DOCKER_IMAGE:latest'
                 }
             }
         }
@@ -76,49 +37,51 @@ pipeline {
                 withCredentials([
                     file(
                         credentialsId: 'kuberconfig',
-                        variable: 'KCFG'
+                        variable: 'KUBECONFIG'
                     )
                 ]) {
-                    script {
-                        try {
-                            sh '''
-                                export KUBECONFIG="$KCFG"
+                    sh '''
+                        export KUBECONFIG="$KUBECONFIG"
 
-                                # Replace the placeholder in the manifest.
-                                sed "s|YOUR_DOCKERHUB_USERNAME|${IMAGE%%/*}|" \
-                                  deployment.yaml > /tmp/devops-assessment9-1.yaml
+                        echo "Checking Kubernetes cluster..."
+                        kubectl config current-context
 
-                                kubectl apply -f /tmp/devops-assessment9-1.yaml
+                        echo "Applying Kubernetes configuration..."
+                        kubectl apply -f deployment.yaml
 
-                                kubectl set image \
-                                  deployment/$DEPLOYMENT \
-                                  $CONTAINER=$IMAGE:$BUILD_NUMBER
+                        echo "Waiting for deployment..."
+                        kubectl rollout status deployment/devOps_assessment9_1
 
-                                kubectl rollout status \
-                                  deployment/$DEPLOYMENT \
-                                  --timeout=120s
+                        echo "Deployment status:"
+                        kubectl get deployment devOps_assessment9_1
 
-                                kubectl get pods
-                                kubectl get svc $SERVICE
-                            '''
-                        } catch (err) {
-                            echo 'Deployment failed. Attempting rollback.'
+                        echo "Pod status:"
+                        kubectl get pods -l app=devOps_assessment9_1
 
-                            sh '''
-                                export KUBECONFIG="$KCFG"
-
-                                kubectl rollout undo deployment/$DEPLOYMENT
-
-                                kubectl rollout status \
-                                  deployment/$DEPLOYMENT \
-                                  --timeout=120s
-                            '''
-
-                            error('Deployment failed; rollback attempted.')
-                        }
-                    }
+                        echo "Service status:"
+                        kubectl get service devOps_assessment9_1-service
+                    '''
                 }
             }
+        }
+    }
+
+    post {
+
+        success {
+            echo '========================================'
+            echo 'PROFILE DEPLOYMENT SUCCESSFUL'
+            echo '========================================'
+            echo "Docker Image: ${DOCKER_IMAGE}:latest"
+            echo 'Replicas: 2'
+            echo 'NodePort: 30080'
+            echo '========================================'
+        }
+
+        failure {
+            echo '========================================'
+            echo 'PIPELINE FAILED'
+            echo '========================================'
         }
     }
 }

@@ -1,116 +1,133 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Placement Portal</title>
+    <title>Personal Profile - Shivam Saini</title>
+
     <style>
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f1f5f9;
-            color: #1e293b;
+            background: #f2f4f7;
+            color: #333;
         }
+
         header {
-            background: #172554;
+            background: #1e3a5f;
             color: white;
-            padding: 25px;
             text-align: center;
+            padding: 35px 20px;
         }
-        nav {
-            background: #1e40af;
-            padding: 12px;
-            text-align: center;
+
+        header h1 {
+            margin: 0;
+            font-size: 32px;
         }
-        nav a {
-            color: white;
-            margin: 0 12px;
-            text-decoration: none;
+
+        header p {
+            margin-top: 8px;
+            font-size: 17px;
         }
-        main {
-            max-width: 1000px;
-            margin: 25px auto;
-            padding: 0 16px;
+
+        .container {
+            max-width: 850px;
+            margin: 30px auto;
+            padding: 0 20px;
         }
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-        }
+
         .card {
             background: white;
-            padding: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
             border-radius: 10px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px #0001;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         }
-        .stats h2 { color: #2563eb; }
+
+        .card h2 {
+            margin-top: 0;
+            color: #1e3a5f;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .info p {
+            margin: 10px 0;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill {
+            background: #1e3a5f;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
         footer {
             text-align: center;
-            padding: 20px;
-            background: #172554;
+            background: #1e3a5f;
             color: white;
+            padding: 15px;
+            margin-top: 30px;
         }
     </style>
 </head>
+
 <body>
+
     <header>
-        <h1>Student Placement Portal</h1>
-        <p>Your gateway to career opportunities</p>
+        <h1>Shivam Saini</h1>
+        <p>Computer Science and Engineering</p>
     </header>
 
-    <nav>
-        <a href="#statistics">Statistics</a>
-        <a href="#students">Students</a>
-        <a href="#companies">Companies</a>
-        <a href="#drives">Recruitment Drives</a>
-    </nav>
+    <div class="container">
 
-    <main>
-        <section id="statistics" class="stats">
-            <article class="card">
-                <h2>850+</h2>
-                <p>Students Placed</p>
-            </article>
-            <article class="card">
-                <h2>120+</h2>
-                <p>Recruiting Companies</p>
-            </article>
-            <article class="card">
-                <h2>₹18 LPA</h2>
-                <p>Highest Package</p>
-            </article>
-        </section>
+        <div class="card info">
+            <h2>Personal Information</h2>
 
-        <section id="students" class="card">
-            <h2>Student Profiles</h2>
-            <p>Shivam Saini — Software Engineering</p>
-            <p>Student ID: STU102 — Computer Science</p>
-        </section>
+            <p><strong>Name:</strong> Shivam Saini</p>
+            <p><strong>Register Number:</strong> 24MIS0305</p>
+            <p><strong>Department:</strong> Computer Science and Engineering</p>
+        </div>
 
-        <section id="companies" class="card">
-            <h2>Company Information</h2>
-            <p>Example Technologies — Software Development</p>
-            <p>Example Analytics — Data Science</p>
-            <p>Example Systems — Cloud Engineering</p>
-        </section>
+        <div class="card">
+            <h2>Skills</h2>
 
-        <section id="drives" class="card">
-            <h2>Upcoming Recruitment Drives</h2>
-            <ul>
-                <li>Example Technologies — Software Engineer</li>
-                <li>Example Analytics — Data Analyst</li>
-                <li>Example Systems — DevOps Intern</li>
-            </ul>
-            <p>Check the eligibility criteria announced by
-               your placement cell before applying.</p>
-        </section>
-    </main>
+            <div class="skills">
+                <span class="skill">C++</span>
+                <span class="skill">Python</span>
+                <span class="skill">JavaScript</span>
+                <span class="skill">React.js</span>
+                <span class="skill">Node.js</span>
+                <span class="skill">Docker</span>
+                <span class="skill">Kubernetes</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Career Objective</h2>
+
+            <p>
+                To build a strong career in software engineering by developing
+                scalable and reliable applications while continuously improving
+                my technical and problem-solving skills.
+            </p>
+        </div>
+
+    </div>
 
     <footer>
-        <p>University Placement Cell | 2026</p>
+        Personal Profile Web Application
     </footer>
+
 </body>
 </html>
